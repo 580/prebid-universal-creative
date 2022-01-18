@@ -227,9 +227,9 @@ function newRenderingManager(win, environment) {
     for (var i = 0; i < 10; i++) {
       w = w.parent;
 
-      if (w.pbjs) {
+      if (w.YMPB) {
         try {
-          w.pbjs.renderAd(doc, adId);
+          w.YMPB.renderAd(doc, adId);
           break;
         } catch (e) {
           continue;
@@ -3022,7 +3022,7 @@ function newEnvironment(win) {
 
     while (!result) {
       try {
-        if (currentWindow.pbjs) {
+        if (currentWindow.YMPB) {
           result = true;
           break;
         }

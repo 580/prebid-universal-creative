@@ -48,6 +48,43 @@ export function newNativeRenderManager(win) {
     }
   }
 
+  // global expanded indicator variable, because API don't have any
+  var expanded = false;
+
+  function expand() {
+      var self= $sf.ext.geom().self;
+      var config = {
+          push: true, // we want to push expanded content
+          b: 0
+      };
+
+      var el = document.getElementById('container');
+
+      if (el) {
+        var containerHeight = el.offsetHeight;
+
+        // get height from bottom, that need to be expanded
+        var expandBottom = containerHeight - self.h;
+
+        // if container is whole inside a SafeFrame, it will not expand
+        if(expandBottom < 0) return;
+
+        config.b = expandBottom;
+        $sf.ext.expand(config);
+      }
+  }
+
+  function expandDelayed(forceExpand = false) {
+      // expand will run just once, or you can force it to run again
+      // but collapse first is needed
+      if(expanded && forceExpand || !expanded) {
+          $sf.ext.collapse();
+          expanded = false;
+          // there must be some timeout, because .collapse(); method is deplayed somehow
+          setTimeout(expand, 0);
+      }
+  }
+
   // START OF MAIN CODE
   let renderNativeAd = function(nativeTag) {
     window.pbNativeData = nativeTag;
@@ -67,6 +104,21 @@ export function newNativeRenderManager(win) {
       nativeAssetManager.loadAssets(nativeTag.adId,fireNativeCallback);
       fireNativeCallback();
       fireNativeImpTracker(nativeTag.adId);
+
+      $sf.ext.register(160, 150, function(status, data) {
+        // this code will do whole magic of "waiting" for right moment
+        if (status === 'geom-update') {
+            expandDelayed();
+        }
+
+        // change global expanded status
+        if (status === 'expanded') {
+            expanded = true;
+        }
+      });
+
+      // init
+      expandDelayed();
     } else {
       console.warn('Prebid Native Tag object was missing \'adId\'.');
     }
