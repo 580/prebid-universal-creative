@@ -61,7 +61,7 @@ export function newNativeRenderManager(win) {
       var el = document.getElementById('container');
 
       if (el) {
-        var containerHeight = el.offsetHeight;
+        var containerHeight = el.offsetHeight || 50;
 
         // get height from bottom, that need to be expanded
         var expandBottom = containerHeight - self.h;
@@ -71,6 +71,8 @@ export function newNativeRenderManager(win) {
 
         config.b = expandBottom;
         $sf.ext.expand(config);
+      } else {
+        setTimeout(expandDelayed, 500);
       }
   }
 
