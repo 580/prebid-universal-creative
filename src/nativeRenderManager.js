@@ -48,44 +48,50 @@ export function newNativeRenderManager(win) {
     }
   }
 
-  // global expanded indicator variable, because API don't have any
-  var expanded = false;
+  // // global expanded indicator variable, because API don't have any
+  // var expanded = false;
+  // var returnCount = 0;
 
-  function expand() {
-      var self= $sf.ext.geom().self;
-      var config = {
-          push: true, // we want to push expanded content
-          b: 0
-      };
+  // function expand() {
+  //     var self= $sf.ext.geom().self;
+  //     var config = {
+  //         push: true, // we want to push expanded content
+  //         b: 0
+  //     };
 
-      var el = document.getElementById('container');
+  //     var el = document.getElementById('container');
+  //     console.log('el', el);
 
-      if (el) {
-        var containerHeight = el.offsetHeight || 50;
+  //     if (el) {
+  //       var containerHeight = el.offsetHeight || 50;
 
-        // get height from bottom, that need to be expanded
-        var expandBottom = containerHeight - self.h;
+  //       // get height from bottom, that need to be expanded
+  //       var expandBottom = containerHeight - self.h;
 
-        // if container is whole inside a SafeFrame, it will not expand
-        if(expandBottom < 0) return;
+  //       // if container is whole inside a SafeFrame, it will not expand
+  //       if(expandBottom < 0) return;
 
-        config.b = expandBottom;
-        $sf.ext.expand(config);
-      } else {
-        setTimeout(expandDelayed, 500);
-      }
-  }
+  //       config.b = expandBottom;
+  //       $sf.ext.expand(config);
+  //     } else {
+  //       console.log('returnCount', returnCount)
+  //       if (returnCount++ < 10) {
+  //         setTimeout(expand, 500);
+  //       }
+  //     }
+  // }
 
-  function expandDelayed(forceExpand = false) {
-      // expand will run just once, or you can force it to run again
-      // but collapse first is needed
-      if(expanded && forceExpand || !expanded) {
-          $sf.ext.collapse();
-          expanded = false;
-          // there must be some timeout, because .collapse(); method is deplayed somehow
-          setTimeout(expand, 0);
-      }
-  }
+  // function expandDelayed(forceExpand = false) {
+  //     // expand will run just once, or you can force it to run again
+  //     // but collapse first is needed
+  //     if(expanded && forceExpand || !expanded) {
+  //         $sf.ext.collapse();
+  //         expanded = false;
+  //         returnCount = 0;
+  //         // there must be some timeout, because .collapse(); method is deplayed somehow
+  //         setTimeout(expand, 0);
+  //     }
+  // }
 
   // START OF MAIN CODE
   let renderNativeAd = function(nativeTag) {
@@ -106,21 +112,21 @@ export function newNativeRenderManager(win) {
       nativeAssetManager.loadAssets(nativeTag.adId,fireNativeCallback);
       fireNativeCallback();
       fireNativeImpTracker(nativeTag.adId);
+      
+      // $sf.ext.register(160, 150, function(status, data) {
+      //   // this code will do whole magic of "waiting" for right moment
+      //   if (status === 'geom-update') {
+      //       expandDelayed(true);
+      //   }
 
-      $sf.ext.register(160, 150, function(status, data) {
-        // this code will do whole magic of "waiting" for right moment
-        if (status === 'geom-update') {
-            expandDelayed();
-        }
+      //   // change global expanded status
+      //   if (status === 'expanded') {
+      //       expanded = true;
+      //   }
+      // });
 
-        // change global expanded status
-        if (status === 'expanded') {
-            expanded = true;
-        }
-      });
-
-      // init
-      expandDelayed();
+      // // init
+      // expandDelayed();
     } else {
       console.warn('Prebid Native Tag object was missing \'adId\'.');
     }
