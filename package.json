@@ -24,6 +24,9 @@
     "url": "https://github.com/prebid/prebid-universal-creative/issues"
   },
   "homepage": "https://github.com/prebid/prebid-universal-creative#readme",
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
+  },
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/plugin-transform-modules-commonjs": "^7.6.0",
