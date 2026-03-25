@@ -3,7 +3,7 @@ FROM buildpack-deps:bullseye
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
 
-ENV NODE_VERSION 8.12.0
+ENV NODE_VERSION 12.22.12
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -65,7 +65,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
 #   && yarn --version
   # && yarn config set registry https://registry.npm.taobao.org/ \
 
-RUN npm config set registry https://registry.npm.taobao.org/
+# RUN npm config set registry https://registry.npm.taobao.org/
 RUN npm install -g gulp-cli
 
 COPY docker-entrypoint.sh /usr/local/bin/
